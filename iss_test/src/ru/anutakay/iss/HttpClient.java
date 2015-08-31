@@ -17,14 +17,12 @@ public class HttpClient {
             HttpGet httpGet = new HttpGet(address);
             HttpResponse httpResponse = httpClient.execute(httpGet);
             HttpEntity httpEntity = httpResponse.getEntity();
-            if(httpEntity!=null) {
+            if(httpEntity != null) {
                 line = EntityUtils.toString(httpEntity, "UTF-8");
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
         return line;
-    }
-    
-    
+    }  
 }
