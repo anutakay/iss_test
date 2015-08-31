@@ -21,14 +21,14 @@ public class MainActivity extends ListActivity implements LoaderCallbacks<String
         Bundle bndl = new Bundle();
         getLoaderManager().initLoader(LOADER_LIST_ID, bndl, this)
         .forceLoad();
-          }
+    }
     
     @Override
     public Loader<String[]> onCreateLoader(int id, Bundle args) {
       XMLAsyncLoader loader = null;
       if (id == LOADER_LIST_ID) {
         loader = new XMLAsyncLoader(this, args);
-        loader.setHttpClient(new HttpClientImpl());
+        loader.setApiClient(new APIClientImpl(this));
       }
       return loader;
     }
