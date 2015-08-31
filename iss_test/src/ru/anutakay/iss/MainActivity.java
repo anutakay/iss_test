@@ -4,7 +4,6 @@ import android.app.ListActivity;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Loader;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -26,10 +25,10 @@ public class MainActivity extends ListActivity implements LoaderCallbacks<String
     
     @Override
     public Loader<String[]> onCreateLoader(int id, Bundle args) {
-      Loader<String[]> loader = null;
+      XMLAsyncLoader loader = null;
       if (id == LOADER_LIST_ID) {
         loader = new XMLAsyncLoader(this, args);
-        Log.d("Debug", "onCreateLoader: " + loader.hashCode());
+        loader.setHttpClient(new HttpClientImpl());
       }
       return loader;
     }

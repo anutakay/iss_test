@@ -8,27 +8,36 @@ import android.content.Context;
 import android.os.Bundle;
 
 public class XMLAsyncLoader extends AsyncTaskLoader<String[]> {
+    
+    HttpClient httpClient;
 
-  public XMLAsyncLoader(Context context, Bundle bundle) {
+    public XMLAsyncLoader(Context context, Bundle bundle) {
       super(context);
-  }
+    }
+    
+    public HttpClient getHttpClient() {
+        return httpClient;
+    }
 
-  @Override
-  public String[] loadInBackground() {
-      String xml = HttpClient.getXML("http://192.168.1.35/list.txt");
-      Document document = Parser.parse(xml);
-      String[] results = parseDocument(document);
-      return results;
-  }
+    public void setHttpClient(HttpClient httpClient) {
+        this.httpClient = httpClient;
+    }
 
-  private String[] parseDocument(Document document) {
-      NodeList nodes = document.getElementsByTagName("track");
-      int length = nodes.getLength();
-      String[] results = new String[length];
-      for(int i = 0; i < length; i++) {
-          results[i] = nodes.item(i).getTextContent();
-      }
-      return results;
-  }
+    @Override
+    public String[] loadInBackground() {
+        String xml = httpClient.getXML("http://192.168.1.35/list.txt");
+        Document document = Parser.parse(xml);
+        String[] results = parseDocument(document);
+        return results;
+    }
 
+    private String[] parseDocument(Document document) {
+        NodeList nodes = document.getElementsByTagName("track");
+        int length = nodes.getLength();
+        String[] results = new String[length];
+        for(int i = 0; i < length; i++) {
+            results[i] = nodes.item(i).getTextContent();
+        }
+        return results;
+    }
 }
