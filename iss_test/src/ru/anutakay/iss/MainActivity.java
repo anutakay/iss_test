@@ -1,5 +1,6 @@
 package ru.anutakay.iss;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -19,9 +20,13 @@ public class MainActivity extends ListActivity
     
     Adapter adapter;
     
+    List<Map<String, String>> tracks = new ArrayList<Map<String, String>>();
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        adapter = new Adapter(this, tracks);
+        setListAdapter(adapter);
         getLoaderManager().initLoader(LIST_LOADER_ID, null, this)
         .forceLoad();
     }
@@ -42,10 +47,8 @@ public class MainActivity extends ListActivity
     @Override
     public void onLoadFinished(Loader<List<Map<String, String>>> loader, 
                                         List<Map<String, String>> data) {
-        String[] from = { "track" };
-        int[] to = { R.id.text };
-        adapter = new Adapter(this, data, R.layout.item, from, to);
-        setListAdapter(adapter);
+        tracks.addAll(data);
+        adapter.notifyDataSetChanged();     
     }
 
     @Override

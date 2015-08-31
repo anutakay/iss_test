@@ -8,9 +8,15 @@ import android.widget.SimpleAdapter;
 
 public class Adapter extends SimpleAdapter {
     
+    final static int LAYOUT = R.layout.item;
+    
+    final static String[] FROM = { "track" };
+    
+    final static int[] TO = { R.id.text };
+    
 
-    public Adapter(Context context, List<Map<String, String>> data, int resource, String[] from, int[] to) {
-        super(context, data, resource, from, to);
+    public Adapter(Context context, List<Map<String, String>> data) {
+        super(context, data, LAYOUT, FROM, TO);
     }
     
     //TODO - перегрузить нужные функции для того, чтобы показывалось название если есть 

@@ -25,10 +25,10 @@ public class APIClientImpl implements APIClient {
     public List<Map<String, String>> getListOfTracks() {
         String xml = httpClient.getXML("http://192.168.1.35/list.txt");
         Document document = Parser.parse(xml);
-        return parseDocument(document);
+        return extractTracks(document);
     }
     
-    private List<Map<String, String>> parseDocument(Document document) {
+    private List<Map<String, String>> extractTracks(Document document) {
         NodeList nodes = document.getElementsByTagName("track");
         int length = nodes.getLength();
         List<Map<String, String>> results = new ArrayList<Map<String, String>>();
