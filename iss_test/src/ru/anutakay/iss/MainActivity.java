@@ -9,7 +9,8 @@ import android.widget.ListView;
 
 public class MainActivity extends ListActivity implements LoaderCallbacks<String[]> {
 
-    static final int LOADER_LIST_ID = 1;
+    static final int LIST_LOADER_ID = 1;
+    static final int FILE_LOADER_ID = 2;
     
     ListView listView;
     
@@ -18,18 +19,20 @@ public class MainActivity extends ListActivity implements LoaderCallbacks<String
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle bndl = new Bundle();
-        getLoaderManager().initLoader(LOADER_LIST_ID, bndl, this)
+        getLoaderManager().initLoader(LIST_LOADER_ID, null, this)
         .forceLoad();
     }
     
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
-    public Loader<String[]> onCreateLoader(int id, Bundle args) {
-      XMLAsyncLoader loader = null;
-      if (id == LOADER_LIST_ID) {
-        loader = new XMLAsyncLoader(this, args);
-        loader.setApiClient(new APIClientImpl(this));
+    public Loader onCreateLoader(int id, Bundle args) {
+      AsyncLoader loader = null;
+      if (id == LIST_LOADER_ID) {
+        loader = new AsyncListLoader(this, args);
+      } if (id == FILE_LOADER_ID) {
+        loader = new AsyncFileLoader(this, args);  
       }
+      loader.setApiClient(new APIClientImpl(this));
       return loader;
     }
 
