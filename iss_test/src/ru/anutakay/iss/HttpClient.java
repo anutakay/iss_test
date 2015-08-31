@@ -8,8 +8,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
-import android.os.AsyncTask;
-
 public class HttpClient {
     
     public static String getXML(String address) {
@@ -27,23 +25,6 @@ public class HttpClient {
         }
         return line;
     }
-
-    public void getXMLAsync(String address, String params) {
-        getXMLAsyncTask task = new getXMLAsyncTask();
-        task.execute(address, params);
-    }
     
-    private class getXMLAsyncTask extends AsyncTask<Object, Object, String> {
-        String address = null;
-        
-        @Override
-        protected String doInBackground(Object... params) {
-            address = (String)params[0];
-            return getXML(address);
-        }
-        
-        @Override
-        protected void onPostExecute(String result) {
-        }
-    };
+    
 }
