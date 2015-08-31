@@ -1,5 +1,10 @@
 package ru.anutakay.iss;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -17,18 +22,20 @@ public class APIClientImpl implements APIClient {
     }
     
     @Override
-    public String[] getListOfTracks() {
+    public List<Map<String, String>> getListOfTracks() {
         String xml = httpClient.getXML("http://192.168.1.35/list.txt");
         Document document = Parser.parse(xml);
         return parseDocument(document);
     }
     
-    private String[] parseDocument(Document document) {
+    private List<Map<String, String>> parseDocument(Document document) {
         NodeList nodes = document.getElementsByTagName("track");
         int length = nodes.getLength();
-        String[] results = new String[length];
+        List<Map<String, String>> results = new ArrayList<Map<String, String>>();
         for(int i = 0; i < length; i++) {
-            results[i] = nodes.item(i).getTextContent();
+            HashMap<String, String> map = new HashMap<String, String>();
+            map.put("track", nodes.item(i).getTextContent());
+            results.add(map);
         }
         return results;
     }
