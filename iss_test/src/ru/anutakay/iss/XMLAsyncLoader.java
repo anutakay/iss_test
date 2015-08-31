@@ -16,7 +16,7 @@ public class XMLAsyncLoader extends AsyncTaskLoader<String[]> {
   @Override
   public String[] loadInBackground() {
       String xml = HttpClient.getXML("http://192.168.1.35/list.txt");
-      Document document = Parser.XMLfromString(xml);
+      Document document = Parser.parse(xml);
       String[] results = parseDocument(document);
       return results;
   }

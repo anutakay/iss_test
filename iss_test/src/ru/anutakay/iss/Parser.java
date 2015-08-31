@@ -2,32 +2,49 @@ package ru.anutakay.iss;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import android.util.Log;
 
 public class Parser {
 
-    public static Document XMLfromString(String xml) {
-
-        Document doc = null;
+    public static Document parse(String xml) {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        if(dbf == null) { return null; }
+        
+        DocumentBuilder db = createDocumentBuilder(dbf);
+        if(db == null) { return null; }
+        
+        Document document = createDocument(xml, db);
+        return document;
+    }
+
+    private static Document createDocument(String xml, DocumentBuilder db) {   
+        ByteArrayInputStream is = createInputStream(xml);
+        if(is == null) { return null; }
+        
+        return createDocumentFromInputStream(db, is);
+    }
+    
+    private static ByteArrayInputStream createInputStream(String xml) {
         try {
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            ByteArrayInputStream is = new ByteArrayInputStream(xml.getBytes("UTF8"));
-            doc = db.parse(is);
-        } catch (ParserConfigurationException e) {
-            Log.d("Debug", "XML parse error: " + e.getMessage());
+            return new ByteArrayInputStream(xml.getBytes("UTF8"));
+        } catch (UnsupportedEncodingException e1) {
             return null;
+        }
+    }
+
+    private static Document createDocumentFromInputStream(DocumentBuilder db, 
+                                                            ByteArrayInputStream is) {
+        try {            
+            return db.parse(is);
         } catch (SAXException e) {
             Log.d("Debug", "Wrong XML file structure: " + e.getMessage());
             return null;
@@ -35,22 +52,14 @@ public class Parser {
             Log.d("Debug", "I/O exeption: " + e.getMessage());
             return null;
         }
-        return doc;
     }
-    
-    public static String getValue(String tag, Node node) {
-        Node n = node.getAttributes().getNamedItem(tag);
-        if(n != null){
-            return node.getAttributes().getNamedItem(tag).getTextContent();
-        }
-        NodeList nlList = ((Element)node).getElementsByTagName(tag);
+
+    private static DocumentBuilder createDocumentBuilder(DocumentBuilderFactory dbf) {
         try {
-            if(nlList.item(0).getFirstChild() == null) {
-                return "null";
-            }
-        } catch(Exception e) {
+            return dbf.newDocumentBuilder();
+        } catch (ParserConfigurationException e) {
+            Log.d("Debug", "XML parse error: " + e.getMessage());
             return null;
         }
-        return nlList.item(0).getFirstChild().getNodeValue();
     }
 }
