@@ -3,11 +3,17 @@ package ru.anutakay.iss;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
+import android.annotation.SuppressLint;
+import android.app.DownloadManager;
 import android.app.ListActivity;
 import android.app.LoaderManager.LoaderCallbacks;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.Loader;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ListView;
 
 public class MainActivity extends ListActivity 
@@ -26,8 +32,9 @@ public class MainActivity extends ListActivity
         super.onCreate(savedInstanceState);
         adapter = new Adapter(this, tracks);
         setListAdapter(adapter);
-        getLoaderManager().initLoader(LIST_LOADER_ID, null, this)
-        .forceLoad();
+        getLoaderManager()
+            .initLoader(LIST_LOADER_ID, null, this)
+            .forceLoad();
     }
     
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -51,4 +58,27 @@ public class MainActivity extends ListActivity
     @Override
     public void onLoaderReset(Loader<List<Map<String, String>>> loader) {   
     }
+    
+    BroadcastReceiver receiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d("Debug", "Получен интент" + intent);
+        }
+        
+    };
+    
+    @SuppressLint("InlinedApi")
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(receiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+        registerReceiver(receiver, new IntentFilter(DownloadManager.ACTION_NOTIFICATION_CLICKED));
+    };
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(receiver);
+    };
 }

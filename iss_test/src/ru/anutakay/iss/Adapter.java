@@ -32,12 +32,12 @@ public class Adapter extends SimpleAdapter {
         
         final Map<String, String> item = (Map<String, String>)getItem(position);
 
-        if (item.get("filename") != null) {
+        if (item.get("exist") != null) {
             text.setText(item.get("filename"));
         } else {
             String url = item.get("track");
             text.setText(url);
-            item.put("filename", "\nololo\n");
+            item.put("exist", "true");
             new Downloader(context).downloadIfMissing(url);
         }
         return view;
