@@ -1,5 +1,6 @@
 package ru.anutakay.iss;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -21,12 +22,45 @@ public class Adapter extends BaseAdapter {
     
     private Context context;
     
+    List<Track> tracks;
     List<Map<String, String>> data;
+    
+    private class Track {
+        String address;
+        String filename;
+        boolean started;
+        boolean exist;
+    }
 
     public Adapter(Context context, List<Map<String, String>> data) {
         super();
         this.context = context;
         this.data = data;
+        tracks = convert();
+    }
+    
+    @Override
+    public void notifyDataSetChanged() {
+        tracks = convert();
+        super.notifyDataSetChanged();
+    }
+    
+    private List<Track> convert() {
+        List<Track> result = new ArrayList<Track>();
+        for(Map<String, String> item : data) {
+            
+           String address = item.get("track");
+           String filename = item.get("filename");
+           
+           Track track = new Track();
+           track.address = address;
+           track.filename = filename;
+           track.started = false;
+           track.exist = false;
+           
+           result.add(track);
+        }
+        return result;
     }
     
     @SuppressLint("ViewHolder")
@@ -42,18 +76,17 @@ public class Adapter extends BaseAdapter {
         return rowView;
     }
     
-    @SuppressWarnings("unchecked")
     private View bindView(View view, int position) {
         TextView text = (TextView)view.findViewById(R.id.text);
         
-        final Map<String, String> item = (Map<String, String>)getItem(position);
+        final Track item = getItem(position);
 
-        if (item.get("exist") != null) {
-            text.setText(item.get("filename"));
-        } else {
-            String url = item.get("track");
+       if (item.exist) {
+            text.setText(item.filename);
+        }else if(!item.started) {
+            String url = item.address;
             text.setText(url);
-            item.put("exist", "true");
+            item.started = true;
             new Downloader(context).downloadIfMissing(url);
         }
         return view;
@@ -61,12 +94,12 @@ public class Adapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return data.size();
+        return tracks.size();
     }
 
     @Override
-    public Object getItem(int position) {
-        return data.get(position);
+    public Track getItem(int position) {
+        return tracks.get(position);
     }
 
     @Override
