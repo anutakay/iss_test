@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import android.content.Context;
-import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SimpleAdapter;
@@ -18,9 +17,11 @@ public class Adapter extends SimpleAdapter {
     
     final static int[] TO = { R.id.text, R.id.text };
     
+    private Context context;
 
     public Adapter(Context context, List<Map<String, String>> data) {
         super(context, data, LAYOUT, FROM, TO);
+        this.context = context;
     }
     
     @SuppressWarnings("unchecked")
@@ -30,21 +31,14 @@ public class Adapter extends SimpleAdapter {
         TextView text = (TextView)view.findViewById(R.id.text);
         
         final Map<String, String> item = (Map<String, String>)getItem(position);
-        text.setText(item.get("filename"));
+
         if (item.get("filename") != null) {
             text.setText(item.get("filename"));
         } else {
-            text.setText(item.get("track"));
-            
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-
-                @Override
-                public void run() {
-                    item.put("filename", "\nololo\n");
-                    Adapter.this.notifyDataSetChanged();
-                }
-            }, 1000);
+            String url = item.get("track");
+            text.setText(url);
+            item.put("filename", "\nololo\n");
+            new Downloader(context).download(url);
         }
         return view;
     }
