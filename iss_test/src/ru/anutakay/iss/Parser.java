@@ -16,6 +16,8 @@ import android.util.Log;
 public class Parser {
 
     public static Document parse(String xml) {
+        if(xml == null) { return null; }
+        
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         if(dbf == null) { return null; }
         

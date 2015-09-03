@@ -1,5 +1,6 @@
 package ru.anutakay.iss;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,12 @@ public class AsyncListLoader extends AsyncLoader<List<Map<String, String>>> {
 
     @Override
     public List<Map<String, String>> loadInBackground() {
-        return apiClient.getListOfTracks();
+        try {
+            return apiClient.getListOfTracks();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+        }
     }
 }

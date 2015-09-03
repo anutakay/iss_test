@@ -1,51 +1,51 @@
 package ru.anutakay.iss;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.ParseException;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class HttpClientImpl implements HttpClient {
-    
+
     @Override
-    public String getXML(String address) {
-            HttpResponse httpResponse = getHttpResponse(address);
-            if(httpResponse == null) { return ""; }
-            
-            HttpEntity httpEntity = httpResponse.getEntity();
-            if(httpEntity == null) { return ""; }
-            
-            return transformToString(httpEntity);
+    public String getXML(String address) throws IOException {
+        URL url = new URL(address);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+
+        InputStream in = new BufferedInputStream(conn.getInputStream());
+        String response = getStringFromInputStream(in);
+        return response;
     }
     
-    private static HttpResponse getHttpResponse(String address) {
-        DefaultHttpClient httpClient = new DefaultHttpClient();
-        HttpGet httpGet = new HttpGet(address);
-        try {
-           return httpClient.execute(httpGet);
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-            return null;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }  
+    private static String getStringFromInputStream(InputStream is) {
 
-    private static String transformToString(HttpEntity httpEntity) {
+        BufferedReader br = null;
+        StringBuilder sb = new StringBuilder();
+
+        String line;
         try {
-            return EntityUtils.toString(httpEntity, "UTF-8");
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return null;
+
+            br = new BufferedReader(new InputStreamReader(is));
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
-            return null;
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
-    }  
+
+        return sb.toString();
+    }
 }

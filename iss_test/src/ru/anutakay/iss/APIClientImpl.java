@@ -1,5 +1,6 @@
 package ru.anutakay.iss;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,13 +23,15 @@ public class APIClientImpl implements APIClient {
     }
     
     @Override
-    public List<Map<String, String>> getListOfTracks() {
+    public List<Map<String, String>> getListOfTracks() throws IOException {
         String xml = httpClient.getXML("http://192.168.1.35/list.txt");
         Document document = Parser.parse(xml);
         return extractTracks(document);
     }
     
     private List<Map<String, String>> extractTracks(Document document) {
+        if(document == null) { return null; }
+        
         NodeList nodes = document.getElementsByTagName("track");
         int length = nodes.getLength();
         List<Map<String, String>> results = new ArrayList<Map<String, String>>();
