@@ -18,6 +18,10 @@ public class APIClientImpl implements APIClient {
     
     HttpClient httpClient;
     
+    NodeList nodes;
+    
+    List<Map<String, String>> results = new ArrayList<Map<String, String>>();
+    
     public APIClientImpl(Context context) {
         this.context = context;
         httpClient = new HttpClientImpl();
@@ -35,15 +39,21 @@ public class APIClientImpl implements APIClient {
     }
     
     private List<Map<String, String>> extractTracks(Document document) {     
-        NodeList nodes = document.getElementsByTagName("track");
+        nodes = document.getElementsByTagName("track");
+        results.clear();
         int length = nodes.getLength();
-        List<Map<String, String>> results = new ArrayList<Map<String, String>>();
         for(int i = 0; i < length; i++) {
-            HashMap<String, String> map = new HashMap<String, String>();
-            map.put("track", nodes.item(i).getTextContent());
-            results.add(map);
+            addTrack(i);
         }
         return results;
+    }
+
+    private void addTrack(int i) {
+        HashMap<String, String> map = new HashMap<String, String>();
+        String track = nodes.item(i).getTextContent();
+        track = track.trim();
+        map.put("track", track);
+        results.add(map);
     }
 
     @Override

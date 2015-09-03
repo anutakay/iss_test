@@ -1,18 +1,26 @@
 package ru.anutakay.iss;
 
+import android.annotation.SuppressLint;
+import android.app.DownloadManager;
+import android.app.DownloadManager.Request;
 import android.content.Context;
-import android.util.Log;
+import android.net.Uri;
 
 public class Downloader {
     
-    Context context;
+    DownloadManager downloadManager;
     
+    @SuppressLint("InlinedApi")
     public Downloader(Context context) {
-        this.context = context;
+        downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
     }
     
-    public void download(String url) {
-        Log.d("Debug", "Скачать " + url);
+    public void download(String address) {
+        Uri uri = Uri.parse(address);
+        Request request = new Request(uri);
+        request.setTitle(uri.toString());
+        request.setMimeType("application/mp3");
+        downloadManager.enqueue(request);
     };
 
 }
