@@ -1,11 +1,10 @@
 package ru.anutakay.iss;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import android.content.Context;
@@ -18,17 +17,13 @@ public class APIClientImpl implements APIClient {
     
     HttpClient httpClient;
     
-    NodeList nodes;
-    
-    List<Map<String, String>> results = new ArrayList<Map<String, String>>();
-    
     public APIClientImpl(Context context) {
         this.context = context;
         httpClient = new HttpClientImpl();
     }
     
     @Override
-    public List<Map<String, String>> getListOfTracks() throws APIException {
+    public List<Track> getListOfTracks() throws APIException {
         try {
             String xml = httpClient.getXML(listofTracksUrl);
             Document document = Parser.parse(xml);
@@ -38,23 +33,20 @@ public class APIClientImpl implements APIClient {
         }       
     }
     
-    private List<Map<String, String>> extractTracks(Document document) {     
-        nodes = document.getElementsByTagName("track");
-        results.clear();
+    private List<Track> extractTracks(Document document) {   
+        NodeList nodes = document.getElementsByTagName("track");   
+        List<Track> results = new ArrayList<Track>();
+
         int length = nodes.getLength();
         for(int i = 0; i < length; i++) {
-            addTrack(i);
+            Node node = nodes.item(i);
+            String uri = node.getTextContent();
+            Track track = new Track(uri.trim()); 
+            results.add(track);
         }
         return results;
     }
 
-    private void addTrack(int i) {
-        HashMap<String, String> map = new HashMap<String, String>();
-        String track = nodes.item(i).getTextContent();
-        track = track.trim();
-        map.put("track", track);
-        results.add(map);
-    }
 
     @Override
     public String loadTrackAndGetNameOfFile(String address) {

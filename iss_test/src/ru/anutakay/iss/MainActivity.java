@@ -2,7 +2,7 @@ package ru.anutakay.iss;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+
 import android.annotation.SuppressLint;
 import android.app.DownloadManager;
 import android.app.ListActivity;
@@ -17,7 +17,7 @@ import android.util.Log;
 import android.widget.ListView;
 
 public class MainActivity extends ListActivity 
-                            implements LoaderCallbacks<List<Map<String, String>>> {
+                            implements LoaderCallbacks<List<Track>> {
 
     static final int LIST_LOADER_ID = 1;
     
@@ -25,7 +25,7 @@ public class MainActivity extends ListActivity
     
     Adapter adapter;
     
-    List<Map<String, String>> tracks = new ArrayList<Map<String, String>>();
+    List<Track> tracks = new ArrayList<Track>();
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,14 +49,14 @@ public class MainActivity extends ListActivity
     }
 
     @Override
-    public void onLoadFinished(Loader<List<Map<String, String>>> loader, 
-                                        List<Map<String, String>> data) {
+    public void onLoadFinished(Loader<List<Track>> loader, 
+                                        List<Track> data) {
         tracks.addAll(data);
         adapter.notifyDataSetChanged();     
     }
 
     @Override
-    public void onLoaderReset(Loader<List<Map<String, String>>> loader) {   
+    public void onLoaderReset(Loader<List<Track>> loader) {   
     }
     
     BroadcastReceiver receiver = new BroadcastReceiver() {
