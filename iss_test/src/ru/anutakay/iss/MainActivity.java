@@ -14,7 +14,6 @@ public class MainActivity extends ListActivity
                             implements LoaderCallbacks<List<Map<String, String>>> {
 
     static final int LIST_LOADER_ID = 1;
-    static final int FILE_LOADER_ID = 2;
     
     ListView listView;
     
@@ -37,9 +36,7 @@ public class MainActivity extends ListActivity
       AsyncLoader loader = null;
       if (id == LIST_LOADER_ID) {
         loader = new AsyncListLoader(this, args);
-      } if (id == FILE_LOADER_ID) {
-        loader = new AsyncFileLoader(this, args);  
-      }
+      } 
       loader.setApiClient(new APIClientImpl(this));
       return loader;
     }
