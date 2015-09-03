@@ -38,7 +38,7 @@ public class Adapter extends SimpleAdapter {
             String url = item.get("track");
             text.setText(url);
             item.put("filename", "\nololo\n");
-            new Downloader(context).download(url);
+            new Downloader(context).downloadIfMissing(url);
         }
         return view;
     }
