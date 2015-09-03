@@ -14,7 +14,12 @@ public class AsyncFileLoader extends AsyncLoader<String> {
 
     @Override
     public String loadInBackground() {    
-        return apiClient.loadTrackAndGetNameOfFile(address);
+        try {
+            return apiClient.loadTrackAndGetNameOfFile(address);
+        } catch (APIException e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 
 }

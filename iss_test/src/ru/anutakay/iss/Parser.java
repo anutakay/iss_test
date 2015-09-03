@@ -15,53 +15,46 @@ import android.util.Log;
 
 public class Parser {
 
-    public static Document parse(String xml) {
-        if(xml == null) { return null; }
-        
+    public static Document parse(String xml) throws ParserException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        if(dbf == null) { return null; }
-        
-        DocumentBuilder db = createDocumentBuilder(dbf);
-        if(db == null) { return null; }
-        
+        DocumentBuilder db = createDocumentBuilder(dbf);      
         Document document = createDocument(xml, db);
         return document;
     }
 
-    private static Document createDocument(String xml, DocumentBuilder db) {   
+    private static Document createDocument(String xml, DocumentBuilder db)  throws ParserException {   
         ByteArrayInputStream is = createInputStream(xml);
-        if(is == null) { return null; }
         
         return createDocumentFromInputStream(db, is);
     }
     
-    private static ByteArrayInputStream createInputStream(String xml) {
+    private static ByteArrayInputStream createInputStream(String xml) throws ParserException {
         try {
             return new ByteArrayInputStream(xml.getBytes("UTF8"));
-        } catch (UnsupportedEncodingException e1) {
-            return null;
+        } catch (UnsupportedEncodingException e) {
+            throw new ParserException(e); 
         }
     }
 
-    private static Document createDocumentFromInputStream(DocumentBuilder db, 
-                                                            ByteArrayInputStream is) {
+    private static Document createDocumentFromInputStream(
+                    DocumentBuilder db, ByteArrayInputStream is) throws ParserException {
         try {            
             return db.parse(is);
         } catch (SAXException e) {
             Log.d("Debug", "Wrong XML file structure: " + e.getMessage());
-            return null;
+            throw new ParserException(e);
         } catch (IOException e) {
             Log.d("Debug", "I/O exeption: " + e.getMessage());
-            return null;
+            throw new ParserException(e);
         }
     }
 
-    private static DocumentBuilder createDocumentBuilder(DocumentBuilderFactory dbf) {
+    private static DocumentBuilder createDocumentBuilder(DocumentBuilderFactory dbf) throws ParserException {
         try {
             return dbf.newDocumentBuilder();
         } catch (ParserConfigurationException e) {
             Log.d("Debug", "XML parse error: " + e.getMessage());
-            return null;
+            throw new ParserException(e);
         }
     }
 }
