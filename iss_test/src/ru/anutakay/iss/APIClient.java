@@ -5,7 +5,7 @@ import java.util.Map;
 
 public interface APIClient {
     
-    List<Map<String, String>> getListOfTracks() throws APIException;
-    
     String loadTrackAndGetNameOfFile(String address) throws APIException;
+
+    List<Map<String, String>> getListOfTracks() throws APIException;
 }

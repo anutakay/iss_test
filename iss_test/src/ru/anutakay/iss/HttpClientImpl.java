@@ -28,12 +28,10 @@ public class HttpClientImpl implements HttpClient {
 
         String line;
         try {
-
             br = new BufferedReader(new InputStreamReader(is));
             while ((line = br.readLine()) != null) {
                 sb.append(line);
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -45,7 +43,6 @@ public class HttpClientImpl implements HttpClient {
                 }
             }
         }
-
         return sb.toString();
     }
 }

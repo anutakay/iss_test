@@ -11,6 +11,8 @@ import org.w3c.dom.NodeList;
 import android.content.Context;
 
 public class APIClientImpl implements APIClient {
+    
+    String listofTracksUrl = "http://192.168.1.35/list.xml";
 
     Context context;
     
@@ -24,7 +26,7 @@ public class APIClientImpl implements APIClient {
     @Override
     public List<Map<String, String>> getListOfTracks() throws APIException {
         try {
-            String xml = httpClient.getXML("http://192.168.1.35/list.txt");
+            String xml = httpClient.getXML(listofTracksUrl);
             Document document = Parser.parse(xml);
             return extractTracks(document);
         } catch (Exception e) {

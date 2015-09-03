@@ -23,8 +23,7 @@ public class Parser {
     }
 
     private static Document createDocument(String xml, DocumentBuilder db)  throws ParserException {   
-        ByteArrayInputStream is = createInputStream(xml);
-        
+        ByteArrayInputStream is = createInputStream(xml);     
         return createDocumentFromInputStream(db, is);
     }
     
