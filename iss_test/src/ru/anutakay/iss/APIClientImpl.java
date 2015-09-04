@@ -17,9 +17,12 @@ public class APIClientImpl implements APIClient {
     
     HttpClient httpClient;
     
+    TrackFactory factory;
+    
     public APIClientImpl(Context context) {
         this.context = context;
-        httpClient = new HttpClientImpl();
+        this.factory = new TrackFactory(context);
+        httpClient = new HttpClientImpl();      
     }
     
     @Override
@@ -36,22 +39,15 @@ public class APIClientImpl implements APIClient {
     private List<Track> extractTracks(Document document) {   
         NodeList nodes = document.getElementsByTagName("track");   
         List<Track> results = new ArrayList<Track>();
-
+        
         int length = nodes.getLength();
         for(int i = 0; i < length; i++) {
             Node node = nodes.item(i);
             String uri = node.getTextContent();
-            Track track = new Track(uri.trim()); 
+            Track track = factory.makeTrack(uri);
             results.add(track);
         }
         return results;
-    }
-
-
-    @Override
-    public String loadTrackAndGetNameOfFile(String address) {
-        // TODO Auto-generated method stub
-        return null;
     }
 
 }

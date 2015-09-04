@@ -44,7 +44,8 @@ public class MainActivity extends ListActivity
       if (id == LIST_LOADER_ID) {
         loader = new AsyncListLoader(this, args);
       } 
-      loader.setApiClient(new APIClientImpl(this));
+      APIClient apiClient = new APIClientImpl(this);
+      loader.setApiClient(apiClient);
       return loader;
     }
 
