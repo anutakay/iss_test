@@ -4,7 +4,7 @@ import android.content.AsyncTaskLoader;
 import android.content.Context;
 
 public abstract class AsyncLoader<T> extends AsyncTaskLoader<T> {
-
+    
     protected APIClient apiClient;
 
     public AsyncLoader(Context context) {

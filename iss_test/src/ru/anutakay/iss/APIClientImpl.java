@@ -40,7 +40,7 @@ public class APIClientImpl implements APIClient {
         int length = nodes.getLength();
         for(int i = 0; i < length; i++) {
             Node node = nodes.item(i);
-            String uri = node.getTextContent();
+            String uri = node.getTextContent().trim();
             Track track = factory.makeTrack(uri);
             results.add(track);
         }

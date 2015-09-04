@@ -2,7 +2,6 @@ package ru.anutakay.iss;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,45 +12,42 @@ public class Adapter extends BaseAdapter {
     
     final static int LAYOUT = R.layout.item;
     
-    final static String[] FROM = { "track", "filename" };
-    
-    final static int[] TO = { R.id.text, R.id.text };
-    
     Context context;
     
-    Tracks tracks = new Tracks();
+    Tracks tracks;
+    
+    Downloader downloader;
 
     public Adapter(Context context, Tracks tracks) {
         super();
         this.context = context;
         this.tracks = tracks;
+        downloader = new Downloader(context); 
     }
     
     @SuppressLint("ViewHolder")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View rowView = convertView;
-        if(rowView == null) {
+        View view = convertView;
+        if(view == null) {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            rowView  = inflater.inflate(LAYOUT, parent, false);
+            view  = inflater.inflate(LAYOUT, parent, false);
         }   
-        rowView = this.bindView(rowView, position);      
-        return rowView;
+        view = this.bindView(view, position);      
+        return view;
     }
     
     private View bindView(View view, int position) {
-        TextView text = (TextView)view.findViewById(R.id.text);
-        
-        final Track track = getItem(position);
+        Track track = getItem(position);
         String title = track.getTitle();
+        
+        TextView text = (TextView)view.findViewById(R.id.text);
         text.setText(title);
-
-        Downloader downloader = new Downloader(context); 
-        if(track.isExist()) {
-            downloader.download(track);
-        } else {
-            Log.d("Debug", "Файл " + track.getTitle() + " уже существует");
+        
+        if(!tracks.checked(position)) { 
+            tracks.check(position);
+            downloader.downloadIfMissing(track);
         }
         return view;
     }
@@ -70,4 +66,5 @@ public class Adapter extends BaseAdapter {
     public long getItemId(int position) {
         return position;
     }
+ 
 }

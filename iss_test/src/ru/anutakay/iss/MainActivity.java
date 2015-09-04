@@ -38,7 +38,7 @@ public class MainActivity extends ListActivity implements LoaderCallbacks<Tracks
     public Loader onCreateLoader(int id, Bundle args) {
       AsyncLoader loader = null;
       if (id == LIST_LOADER_ID) {
-        loader = new AsyncListLoader(this, args);
+        loader = new AsyncListLoader(this);
       } 
       APIClient apiClient = new APIClientImpl(this);
       loader.setApiClient(apiClient);

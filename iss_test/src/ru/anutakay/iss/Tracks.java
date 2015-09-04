@@ -3,16 +3,15 @@ package ru.anutakay.iss;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.content.Context;
-
 public class Tracks {
     
-    public Context context;
-    
     public List<Track> tracks;
+    
+    public List<Integer> checked;
 
     public Tracks() {
         tracks = new ArrayList<Track>();
+        checked = new ArrayList<Integer>();
     }
 
     public int size() {
@@ -29,6 +28,7 @@ public class Tracks {
     
     public void set(Tracks data) {
         tracks.clear();
+        checked.clear();
         addAll(data);
     }
     
@@ -38,5 +38,13 @@ public class Tracks {
 
     public void addAll(List<Track> data) {
         tracks.addAll(data);
+    }
+
+    public boolean checked(int position) {
+        return checked.contains(position);
+    }
+    
+    public void check(int position) {
+        checked.add(position);
     }
 }
