@@ -2,6 +2,7 @@ package ru.anutakay.iss;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,6 +60,14 @@ public class Adapter extends BaseAdapter {
         if(!track.isExist()) {
             downloader.download(track);
             tracks.check(position);
+            Handler h = new Handler();
+            h.post(new Runnable() {
+
+                @Override
+                public void run() {
+                    Adapter.this.notifyDataSetChanged();
+                }
+            });
         } 
     }
 

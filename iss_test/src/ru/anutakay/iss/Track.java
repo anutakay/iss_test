@@ -3,7 +3,6 @@ package ru.anutakay.iss;
 import java.io.File;
 
 import android.net.Uri;
-import android.util.Log;
 
 public class Track {
     
@@ -17,16 +16,14 @@ public class Track {
     }
     
     public String getTitle() {
-        Log.d("Debug", "getTitle");
         if(isExist()) {
-            return getFile().getName();
+            return getFile().toString();
         } else {
             return source.toString();
         }
     }
     
     public String getProgressTitle() {
-        Log.d("Debug", "getProgressTitle");
         return source.toString();
     }
     
