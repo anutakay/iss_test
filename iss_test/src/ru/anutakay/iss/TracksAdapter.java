@@ -2,29 +2,33 @@ package ru.anutakay.iss;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-public class Adapter extends BaseAdapter {
+public class TracksAdapter extends BaseAdapter implements DownloadListener {
     
-    final static int LAYOUT = R.layout.item;
+    private int layout;
     
-    Context context;
+    private Tracks tracks;
     
-    Tracks tracks;
+    private Downloader downloader;
     
-    Downloader downloader;
-
-    public Adapter(Context context, Tracks tracks) {
-        super();
-        this.context = context;
-        this.tracks = tracks;
+    private TrackTitleDelegate namer;
+    
+    private LayoutInflater inflater;
+    
+    public TracksAdapter(Context context, int layout) {
+        tracks = new Tracks();
+        this.layout = layout;
         downloader = new Downloader(context); 
+        namer = new TrackTitleDelegateImpl(context);
+        inflater = (LayoutInflater) context
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
     
     @SuppressLint("ViewHolder")
@@ -32,9 +36,7 @@ public class Adapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = convertView;
         if(view == null) {
-            LayoutInflater inflater = (LayoutInflater) context
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view  = inflater.inflate(LAYOUT, parent, false);
+            view  = inflater.inflate(layout, parent, false);
         }   
         view = this.bindView(view, position);      
         return view;
@@ -47,9 +49,9 @@ public class Adapter extends BaseAdapter {
         boolean inProgress = tracks.checked(position);
         
         if(inProgress) { 
-            text.setText(track.getProgressTitle());       
+            text.setText(namer.getProgressTitle(track));       
         } else {
-            text.setText(track.getTitle(context));
+            text.setText(namer.getTitle(track));
             downloadIfMissing(position);
         }
         return view;
@@ -57,18 +59,23 @@ public class Adapter extends BaseAdapter {
 
     private void downloadIfMissing(int position) {
         Track track = getItem(position);
-        if(!track.isExist()) {
+        boolean downloaded = track.fileExist();
+        
+        if(!downloaded) {
             downloader.download(track);
             tracks.check(position);
-            Handler h = new Handler();
-            h.post(new Runnable() {
-
-                @Override
-                public void run() {
-                    Adapter.this.notifyDataSetChanged();
-                }
-            });
+            notifyAsync();
         } 
+    }
+
+    private void notifyAsync() {
+        Handler h = new Handler();
+        h.post(new Runnable() {
+            @Override
+            public void run() {
+                notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
@@ -85,11 +92,17 @@ public class Adapter extends BaseAdapter {
     public long getItemId(int position) {
         return position;
     }
-    
+
     @Override
-    public void notifyDataSetChanged() {
-        Log.d("Debug", "notifyDataSetChanged");
-        super.notifyDataSetChanged();
+    public void onFileLoadFinished(String uriString) {
+        tracks.uncheck(Uri.parse(uriString)); 
+        notifyAsync();
+    }
+
+    @Override
+    public void onLoadFinished(Tracks data) {
+        tracks.set(data);
+        notifyAsync();
     }
  
 }

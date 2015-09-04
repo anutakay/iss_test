@@ -15,10 +15,6 @@ public class Downloader {
         downloadManager = (DownloadManager) context.getSystemService(
                                                         Context.DOWNLOAD_SERVICE);
     }  
-    
-    public void downloadIfMissing(Track track) {
-
-    }
 
     public void download(Track track) {  
         Uri source = track.getSource();
