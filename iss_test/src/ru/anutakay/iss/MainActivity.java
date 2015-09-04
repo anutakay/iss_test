@@ -9,6 +9,9 @@ import android.content.BroadcastReceiver;
 import android.content.IntentFilter;
 import android.content.Loader;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 
 public class MainActivity extends ListActivity implements LoaderCallbacks<Tracks> {
 
@@ -18,6 +21,8 @@ public class MainActivity extends ListActivity implements LoaderCallbacks<Tracks
     
     BroadcastReceiver receiver;
     
+    Player player;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);     
@@ -26,10 +31,22 @@ public class MainActivity extends ListActivity implements LoaderCallbacks<Tracks
         receiver = new DownloadReceiver(adapter);
         downloadListener = adapter;
         
+        player = new PlayerImpl();
+        
+        getListView().setOnItemClickListener(listener);
+        
         LoaderManager loaderManager = getLoaderManager();
         Loader<Tracks> loader = loaderManager.initLoader(LIST_LOADER_ID, null, this);
         loader.forceLoad();
     }
+    
+    OnItemClickListener listener = new OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Track track = (Track)getListView().getAdapter().getItem(position);
+            player.playPause(track);  
+        }
+    };
     
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
