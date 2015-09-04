@@ -1,24 +1,21 @@
 package ru.anutakay.iss;
 
-import java.util.Collections;
-import java.util.List;
-
 import android.content.Context;
 import android.os.Bundle;
 
-public class AsyncListLoader extends AsyncLoader<List<Track>> {
+public class AsyncListLoader extends AsyncLoader<Tracks> {
     
     public AsyncListLoader(Context context, Bundle bundle) {
       super(context);
     }
 
     @Override
-    public List<Track> loadInBackground() {
+    public Tracks loadInBackground() {
         try {
-            return apiClient.getListOfTracks();
+            return apiClient.getTracks();
         } catch (APIException e) {
             e.printStackTrace();
-            return Collections.emptyList();
+            return new Tracks();
         }
     }
 }

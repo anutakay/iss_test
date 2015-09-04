@@ -1,7 +1,5 @@
 package ru.anutakay.iss;
 
-import java.util.List;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
@@ -19,11 +17,11 @@ public class Adapter extends BaseAdapter {
     
     final static int[] TO = { R.id.text, R.id.text };
     
-    private Context context;
+    Context context;
     
-    List<Track> tracks;    
+    Tracks tracks = new Tracks();
 
-    public Adapter(Context context, List<Track> tracks) {
+    public Adapter(Context context, Tracks tracks) {
         super();
         this.context = context;
         this.tracks = tracks;

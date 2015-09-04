@@ -1,8 +1,5 @@
 package ru.anutakay.iss;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -26,7 +23,7 @@ public class APIClientImpl implements APIClient {
     }
     
     @Override
-    public List<Track> getListOfTracks() throws APIException {
+    public Tracks getTracks() throws APIException {
         try {
             String xml = httpClient.getXML(listofTracksUrl);
             Document document = Parser.parse(xml);
@@ -36,9 +33,9 @@ public class APIClientImpl implements APIClient {
         }       
     }
     
-    private List<Track> extractTracks(Document document) {   
+    private Tracks extractTracks(Document document) {   
         NodeList nodes = document.getElementsByTagName("track");   
-        List<Track> results = new ArrayList<Track>();
+        Tracks results = new Tracks();
         
         int length = nodes.getLength();
         for(int i = 0; i < length; i++) {
