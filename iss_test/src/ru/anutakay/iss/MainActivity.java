@@ -47,11 +47,31 @@ public class MainActivity extends ListActivity implements LoaderCallbacks<Tracks
             player.playPause(track);  
         }
     };
-    
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+      
+    @SuppressLint("InlinedApi")
     @Override
-    public Loader onCreateLoader(int id, Bundle args) {
-      AsyncLoader loader = null;
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(receiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+        player.resume();
+    };
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(receiver);
+        player.pause();
+    };
+    
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        player.destroy();
+    }
+    
+    @Override
+    public Loader<Tracks> onCreateLoader(int id, Bundle args) {
+      AsyncLoader<Tracks> loader = null;
       if (id == LIST_LOADER_ID) {
         loader = new AsyncListLoader(this);
       } 
@@ -68,17 +88,4 @@ public class MainActivity extends ListActivity implements LoaderCallbacks<Tracks
     @Override
     public void onLoaderReset(Loader<Tracks> loader) {   
     }
-    
-    @SuppressLint("InlinedApi")
-    @Override
-    protected void onResume() {
-        super.onResume();
-        registerReceiver(receiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
-    };
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        unregisterReceiver(receiver);
-    };
 }
