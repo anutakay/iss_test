@@ -23,8 +23,8 @@ public class TracksAdapter extends BaseAdapter implements DownloadListener {
     private LayoutInflater inflater;
     
     public TracksAdapter(Context context, int layout) {
-        tracks = new Tracks();
         this.layout = layout;
+        tracks = new Tracks();
         downloader = new Downloader(context); 
         namer = new TrackTitleDelegateImpl(context);
         inflater = (LayoutInflater) context
