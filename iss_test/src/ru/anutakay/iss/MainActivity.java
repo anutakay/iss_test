@@ -9,6 +9,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.Loader;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ListView;
@@ -57,9 +59,29 @@ public class MainActivity extends ListActivity implements LoaderCallbacks<Tracks
     
     BroadcastReceiver receiver = new BroadcastReceiver() {
 
+        @SuppressLint("InlinedApi")
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d("Debug", "Получен интент" + intent);
+            String action = intent.getAction();
+            
+            Log.d("Debug", ""+intent);
+
+            //Сообщение о том, что загрузка закончена
+            if (DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(action)) {
+                long downloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0);
+                DownloadManager dm = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+                DownloadManager.Query query = new DownloadManager.Query();          
+                query.setFilterById(downloadId);
+                Cursor cursor = dm.query(query);
+                if (cursor.moveToFirst()) {
+                    int columnIndex = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS);
+                    if (DownloadManager.STATUS_SUCCESSFUL == cursor.getInt(columnIndex)) {                      
+                        String uriString = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
+                        tracks.uncheck(Uri.parse(uriString));
+                        adapter.notifyDataSetChanged();
+                    }
+                }
+            }
         }
         
     };
@@ -69,7 +91,6 @@ public class MainActivity extends ListActivity implements LoaderCallbacks<Tracks
     protected void onResume() {
         super.onResume();
         registerReceiver(receiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
-        registerReceiver(receiver, new IntentFilter(DownloadManager.ACTION_NOTIFICATION_CLICKED));
     };
 
     @Override

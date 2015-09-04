@@ -3,28 +3,35 @@ package ru.anutakay.iss;
 import java.io.File;
 
 import android.net.Uri;
+import android.util.Log;
 
 public class Track {
     
     private Uri source;
     
-    private File file;
+    File dir;
     
     public Track(String uri, File dir) {     
         source = Uri.parse(uri);
-        file = new File(dir, source.getLastPathSegment());
+        this.dir = dir;
     }
     
     public String getTitle() {
-        if(file.exists()) {
-            return file.getName();
+        Log.d("Debug", "getTitle");
+        if(isExist()) {
+            return getFile().getName();
         } else {
             return source.toString();
         }
     }
     
+    public String getProgressTitle() {
+        Log.d("Debug", "getProgressTitle");
+        return source.toString();
+    }
+    
     public boolean isExist() {
-        return file.exists();
+        return getFile().exists();
     }   
     
     public Uri getSource() {
@@ -32,10 +39,10 @@ public class Track {
     }
     
     public Uri getDestination() {
-        return Uri.fromFile(file);
+        return Uri.fromFile(getFile());
     }
     
-    public File getFile() {
-        return file;
+    private File getFile() {
+        return new File(dir, source.getLastPathSegment());
     }
 }

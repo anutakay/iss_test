@@ -1,17 +1,21 @@
 package ru.anutakay.iss;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import android.net.Uri;
 
 public class Tracks {
     
     public List<Track> tracks;
     
-    public List<Integer> checked;
+    public Map<String, Integer> checked;
 
     public Tracks() {
         tracks = new ArrayList<Track>();
-        checked = new ArrayList<Integer>();
+        checked = new HashMap<String, Integer>();
     }
 
     public int size() {
@@ -41,10 +45,19 @@ public class Tracks {
     }
 
     public boolean checked(int position) {
-        return checked.contains(position);
+        return checked.containsValue(position);
     }
     
     public void check(int position) {
-        checked.add(position);
+        Track track = tracks.get(position);
+        Uri uri = track.getSource();
+        checked.put(uri.getLastPathSegment(), position);
+    }
+    
+    public void uncheck(Uri uri) {
+        String str = uri.getLastPathSegment();
+        if(checked.containsKey(str)) {
+            checked.remove(str);
+        }  
     }
 }

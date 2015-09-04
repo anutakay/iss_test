@@ -2,6 +2,7 @@ package ru.anutakay.iss;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,17 +40,26 @@ public class Adapter extends BaseAdapter {
     }
     
     private View bindView(View view, int position) {
-        Track track = getItem(position);
-        String title = track.getTitle();
-        
         TextView text = (TextView)view.findViewById(R.id.text);
-        text.setText(title);
         
-        if(!tracks.checked(position)) { 
-            tracks.check(position);
-            downloader.downloadIfMissing(track);
+        Track track = getItem(position);
+        boolean inProgress = tracks.checked(position);
+        
+        if(inProgress) { 
+            text.setText(track.getProgressTitle());       
+        } else {
+            text.setText(track.getTitle());
+            downloadIfMissing(position);
         }
         return view;
+    }
+
+    private void downloadIfMissing(int position) {
+        Track track = getItem(position);
+        if(!track.isExist()) {
+            downloader.download(track);
+            tracks.check(position);
+        } 
     }
 
     @Override
@@ -65,6 +75,12 @@ public class Adapter extends BaseAdapter {
     @Override
     public long getItemId(int position) {
         return position;
+    }
+    
+    @Override
+    public void notifyDataSetChanged() {
+        Log.d("Debug", "notifyDataSetChanged");
+        super.notifyDataSetChanged();
     }
  
 }
