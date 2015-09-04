@@ -92,10 +92,22 @@ public class TracksAdapter extends BaseAdapter implements DownloadListener {
     public long getItemId(int position) {
         return position;
     }
+    
+    @Override
+    public boolean isEnabled(int position) {
+        if(tracks.checked(position)) {
+            return false;
+        }
+        if(getItem(position).fileExist()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     @Override
     public void onFileLoadFinished(String uriString) {
-        tracks.uncheck(Uri.parse(uriString)); 
+        tracks.uncheck(Uri.parse(uriString));
         notifyAsync();
     }
 
