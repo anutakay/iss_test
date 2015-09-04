@@ -2,6 +2,9 @@ package ru.anutakay.iss;
 
 import java.io.File;
 
+import wseemann.media.FFmpegMediaMetadataRetriever;
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.net.Uri;
 
 public class Track {
@@ -15,12 +18,21 @@ public class Track {
         this.dir = dir;
     }
     
-    public String getTitle() {
+    public String getTitle(Context context) {
         if(isExist()) {
-            return getFile().toString();
+            return getNameFromMetadata(context);
         } else {
             return source.toString();
         }
+    }
+    
+    @SuppressLint("InlinedApi")
+    private String getNameFromMetadata(Context context) {
+        FFmpegMediaMetadataRetriever retriever = new FFmpegMediaMetadataRetriever(); 
+        retriever.setDataSource(context, this.getDestination()); 
+        String title = retriever.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_TITLE);
+        retriever.release();
+        return title;
     }
     
     public String getProgressTitle() {

@@ -49,7 +49,7 @@ public class Adapter extends BaseAdapter {
         if(inProgress) { 
             text.setText(track.getProgressTitle());       
         } else {
-            text.setText(track.getTitle());
+            text.setText(track.getTitle(context));
             downloadIfMissing(position);
         }
         return view;
