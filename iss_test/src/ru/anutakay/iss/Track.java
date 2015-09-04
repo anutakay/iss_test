@@ -2,15 +2,13 @@ package ru.anutakay.iss;
 
 import java.io.File;
 
-import android.content.Context;
 import android.net.Uri;
-import android.util.Log;
 
 public class Track {
     
-    Uri source;
+    private Uri source;
     
-    File file;
+    private File file;
     
     public Track(String uri, File dir) {     
         source = Uri.parse(uri);
@@ -25,15 +23,19 @@ public class Track {
         }
     }
     
+    public boolean isExist() {
+        return file.exists();
+    }   
     
-    public void downloadIfNotExist(Context context) {
-        Downloader downloader = new Downloader(context);        
-        if(!file.exists()) {
-            downloader.download(source, file);
-        } else {
-            Log.d("Debug", "Файл " + file.getName() + " уже существует");
-        }
+    public Uri getSource() {
+        return source;
     }
     
+    public Uri getDestination() {
+        return Uri.fromFile(file);
+    }
     
+    public File getFile() {
+        return file;
+    }
 }

@@ -1,7 +1,5 @@
 package ru.anutakay.iss;
 
-import java.io.File;
-
 import android.annotation.SuppressLint;
 import android.app.DownloadManager;
 import android.app.DownloadManager.Request;
@@ -18,8 +16,10 @@ public class Downloader {
                                                         Context.DOWNLOAD_SERVICE);
     }  
 
-    public void download(Uri source, File file) {
-        Uri destination = Uri.fromFile(file);
+    public void download(Track track) {
+        Uri source = track.getSource();
+        Uri destination = track.getDestination();
+        
         Request request = new Request(source);
         request.setDestinationUri(destination);
         request.setTitle(source.toString());

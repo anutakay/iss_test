@@ -4,6 +4,7 @@ import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +21,7 @@ public class Adapter extends BaseAdapter {
     
     private Context context;
     
-    List<Track> tracks;
-    
+    List<Track> tracks;    
 
     public Adapter(Context context, List<Track> tracks) {
         super();
@@ -45,10 +45,16 @@ public class Adapter extends BaseAdapter {
     private View bindView(View view, int position) {
         TextView text = (TextView)view.findViewById(R.id.text);
         
-        final Track item = getItem(position);
-        String title = item.getTitle();
+        final Track track = getItem(position);
+        String title = track.getTitle();
         text.setText(title);
-        item.downloadIfNotExist(context);
+
+        Downloader downloader = new Downloader(context); 
+        if(track.isExist()) {
+            downloader.download(track);
+        } else {
+            Log.d("Debug", "Файл " + track.getTitle() + " уже существует");
+        }
         return view;
     }
 
