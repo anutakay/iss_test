@@ -10,8 +10,11 @@ public class AsyncListLoader extends AsyncLoader<Tracks> {
 
     @Override
     public Tracks loadInBackground() {
+        if(getApiClient() == null) {
+            return new Tracks();
+        }
         try {
-            return apiClient.getTracks();
+            return getApiClient().getTracks();
         } catch (APIException e) {
             e.printStackTrace();
             return new Tracks();

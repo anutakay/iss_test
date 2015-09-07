@@ -8,7 +8,7 @@ import android.content.Context;
 
 public class APIClientImpl implements APIClient {
     
-    String listofTracksUrl = "http://192.168.1.35/list.xml";
+    String listofTracksUrl;
 
     Context context;
     
@@ -19,7 +19,8 @@ public class APIClientImpl implements APIClient {
     public APIClientImpl(Context context) {
         this.context = context;
         this.factory = new TrackFactory(context);
-        httpClient = new HttpClientImpl();      
+        httpClient = new HttpClientImpl();   
+        listofTracksUrl = context.getString(R.string.api_list);
     }
     
     @Override

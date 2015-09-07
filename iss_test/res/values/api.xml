@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+     <string name="api_list">http://anutakay.esy.es/list.xml</string>
+    
+</resources>
