@@ -6,7 +6,7 @@ import org.w3c.dom.NodeList;
 
 import android.content.Context;
 
-public class APIClientImpl implements APIClient {
+public class XmlApiClient implements APIClient {
     
     String listofTracksUrl;
 
@@ -16,17 +16,17 @@ public class APIClientImpl implements APIClient {
     
     TrackFactory factory;
     
-    public APIClientImpl(Context context) {
+    public XmlApiClient(Context context) {
         this.context = context;
         this.factory = new TrackFactory(context);
         httpClient = new HttpClientImpl();   
-        listofTracksUrl = context.getString(R.string.api_list);
+        listofTracksUrl = context.getString(R.string.api_list_xml);
     }
     
     @Override
     public Tracks getTracks() throws APIException {
         try {
-            String xml = httpClient.getXML(listofTracksUrl);
+            String xml = httpClient.get(listofTracksUrl);
             Document document = Parser.parse(xml);
             return extractTracks(document);
         } catch (Exception e) {

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     
-     <string name="api_list">http://anutakay.esy.es/list.xml</string>
+     <string name="api_list_xml">http://anutakay.esy.es/list.xml</string>
+     <string name="api_list_txt">http://anutakay.esy.es/list.txt</string>
     
 </resources>

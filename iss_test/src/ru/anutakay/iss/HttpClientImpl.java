@@ -11,7 +11,7 @@ import java.net.URL;
 public class HttpClientImpl implements HttpClient {
 
     @Override
-    public String getXML(String address) throws IOException {
+    public String get(String address) throws IOException {
         URL url = new URL(address);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
@@ -45,4 +45,5 @@ public class HttpClientImpl implements HttpClient {
         }
         return sb.toString();
     }
+
 }

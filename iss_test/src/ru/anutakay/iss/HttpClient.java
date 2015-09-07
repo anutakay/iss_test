@@ -4,6 +4,6 @@ import java.io.IOException;
 
 public interface HttpClient {
 
-    String getXML(String address) throws IOException;
+    String get(String address) throws IOException;
 
 }
